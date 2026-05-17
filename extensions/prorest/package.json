@@ -1,8 +1,8 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
-  "name": "kill-process",
-  "title": "Kill Process",
-  "description": "Terminate processes sorted by CPU or memory usage",
+  "name": "prorest",
+  "title": "Prorest",
+  "description": "Restart processes sorted by CPU or memory usage",
   "icon": "icon.png",
   "author": "rolandleth",
   "contributors": [
@@ -24,8 +24,8 @@
   "commands": [
     {
       "name": "index",
-      "title": "Kill Process",
-      "description": "Lists all running processes, ordered by CPU or memory usage and allows (force) killing one",
+      "title": "Restart Process",
+      "description": "Lists all running processes, ordered by CPU or memory usage and allows (force) restarting one",
       "mode": "view"
     }
   ],
@@ -36,20 +36,20 @@
       "description": "Lists running processes with their CPU and memory usage, sorted by memory usage"
     },
     {
-      "name": "kill-process",
-      "title": "(Force) Kill Process",
-      "description": "Terminates a process by its exact name or PID (Force kill requires enabling sudo authentication with touchID on macOS: https://dev.to/siddhantkcode/enable-touch-id-authentication-for-sudo-on-macos-sonoma-14x-4d28, admin rights on Windows)"
+      "name": "restart-process",
+      "title": "(Force) Restart Process",
+      "description": "Restarts a process by its exact name or PID (Force restart requires enabling sudo authentication with touchID on macOS: https://dev.to/siddhantkcode/enable-touch-id-authentication-for-sudo-on-macos-sonoma-14x-4d28, admin rights on Windows)"
     },
     {
-      "name": "killall-process",
-      "title": "(Force) Kill All Processes by Name",
-      "description": "Terminates all processes matching a given name using killall (macOS) or taskkill /IM (Windows). Force kill requires enabling sudo authentication with touchID on macOS, admin rights on Windows."
+      "name": "restartall-process",
+      "title": "(Force) Restart All Processes by Name",
+      "description": "Restarts all processes matching a given name by terminating and relaunching them. Force restart requires enabling sudo authentication with touchID on macOS, admin rights on Windows."
     }
   ],
   "ai": {
     "evals": [
       {
-        "input": "@kill-process list all processes",
+        "input": "@prorest list all processes",
         "mocks": {
           "list-processes": [
             {
@@ -104,31 +104,31 @@
         ]
       },
       {
-        "input": "@kill-process kill PID 12345",
+        "input": "@prorest restart PID 12345",
         "mocks": {
-          "kill-process": [
+          "restart-process": [
             {
               "success": true,
-              "message": "Killed process: (PID: 12345)"
+              "message": "Restarted process: (PID: 12345)"
             }
           ]
         },
         "expected": [
           {
             "callsTool": {
-              "name": "kill-process",
+              "name": "restart-process",
               "arguments": {
                 "id": 12345
               }
             }
           },
           {
-            "meetsCriteria": "Directly kills a process by its PID"
+            "meetsCriteria": "Directly restarts a process by its PID"
           }
         ]
       },
       {
-        "input": "@kill-process list Chrome processes",
+        "input": "@prorest list Chrome processes",
         "mocks": {
           "list-processes": [
             {
@@ -180,7 +180,7 @@
         ]
       },
       {
-        "input": "@kill-process kill Safari",
+        "input": "@prorest restart Safari",
         "mocks": {
           "list-processes": [
             {
@@ -224,9 +224,9 @@
               "appName": "Safari"
             }
           ],
-          "kill-process": {
+          "restart-process": {
             "success": true,
-            "message": "Killed process: Safari (PID: 5678)"
+            "message": "Restarted process: Safari (PID: 5678)"
           }
         },
         "expected": [
@@ -242,7 +242,7 @@
           },
           {
             "callsTool": {
-              "name": "kill-process",
+              "name": "restart-process",
               "arguments": {
                 "processName": "Safari",
                 "id": 5678,
@@ -251,12 +251,12 @@
             }
           },
           {
-            "meetsCriteria": "Confirms killing Safari process"
+            "meetsCriteria": "Confirms restarting Safari process"
           }
         ]
       },
       {
-        "input": "@kill-process kill Notion",
+        "input": "@prorest restart Notion",
         "mocks": {
           "list-processes": [
             {
@@ -280,9 +280,9 @@
               "appName": "Notion"
             }
           ],
-          "kill-process": {
+          "restart-process": {
             "success": true,
-            "message": "Killed process: Notion (PID: 28588)"
+            "message": "Restarted process: Notion (PID: 28588)"
           }
         },
         "expected": [
@@ -298,7 +298,7 @@
           },
           {
             "callsTool": {
-              "name": "kill-process",
+              "name": "restart-process",
               "arguments": {
                 "processName": "Notion",
                 "id": 28588,
@@ -307,12 +307,12 @@
             }
           },
           {
-            "meetsCriteria": "Confirms killing Notion process"
+            "meetsCriteria": "Confirms restarting Notion process"
           }
         ]
       },
       {
-        "input": "@kill-process kill Notion with related processes",
+        "input": "@prorest restart Notion with related processes",
         "mocks": {
           "list-processes": [
             {
@@ -356,22 +356,22 @@
               "appName": "Notion"
             }
           ],
-          "kill-process": [
+          "restart-process": [
             {
               "success": true,
-              "message": "Killed process: Notion (PID: 28588)"
+              "message": "Restarted process: Notion (PID: 28588)"
             },
             {
               "success": false,
-              "message": "Failed to kill process: Notion Helper (Renderer) (PID: 28601)"
+              "message": "Failed to restart process: Notion Helper (Renderer) (PID: 28601)"
             },
             {
               "success": false,
-              "message": "Failed to kill process: Notion Helper (PID: 28596)"
+              "message": "Failed to restart process: Notion Helper (PID: 28596)"
             },
             {
               "success": false,
-              "message": "Failed to kill process: Notion Helper (GPU) (PID: 28592)"
+              "message": "Failed to restart process: Notion Helper (GPU) (PID: 28592)"
             }
           ]
         },
@@ -388,7 +388,7 @@
           },
           {
             "callsTool": {
-              "name": "kill-process",
+              "name": "restart-process",
               "arguments": {
                 "processName": "Notion",
                 "id": 28588,
@@ -397,12 +397,12 @@
             }
           },
           {
-            "meetsCriteria": "Kills Notion and all its helper processes as requested, but fails to kill some of them as main process is killed first"
+            "meetsCriteria": "Restarts Notion and all its helper processes as requested, but fails to restart some of them as main process is restarted first"
           }
         ]
       },
       {
-        "input": "@kill-process kill Notion and Notion Calendar",
+        "input": "@prorest restart Notion and Notion Calendar",
         "mocks": {
           "list-processes": [
             {
@@ -426,14 +426,14 @@
               "appName": "Notion Calendar"
             }
           ],
-          "kill-process": [
+          "restart-process": [
             {
               "success": true,
-              "message": "Killed process: Notion (PID: 41406)"
+              "message": "Restarted process: Notion (PID: 41406)"
             },
             {
               "success": true,
-              "message": "Killed process: Notion Calendar (PID: 28757)"
+              "message": "Restarted process: Notion Calendar (PID: 28757)"
             }
           ]
         },
@@ -455,7 +455,7 @@
           },
           {
             "callsTool": {
-              "name": "kill-process",
+              "name": "restart-process",
               "arguments": {
                 "processName": "Notion",
                 "id": 41406,
@@ -465,7 +465,7 @@
           },
           {
             "callsTool": {
-              "name": "kill-process",
+              "name": "restart-process",
               "arguments": {
                 "processName": "Notion Calendar",
                 "id": 28757,
@@ -474,12 +474,12 @@
             }
           },
           {
-            "meetsCriteria": "Successfully kills both Notion and Notion Calendar main processes"
+            "meetsCriteria": "Successfully restarts both Notion and Notion Calendar main processes"
           }
         ]
       },
       {
-        "input": "@kill-process kill Arc and related processes",
+        "input": "@prorest restart Arc and related processes",
         "mocks": {
           "list-processes": [
             {
@@ -523,22 +523,22 @@
               "appName": "Arc"
             }
           ],
-          "kill-process": [
+          "restart-process": [
             {
               "success": true,
-              "message": "Killed process: Arc (PID: 12345)"
+              "message": "Restarted process: Arc (PID: 12345)"
             },
             {
               "success": false,
-              "message": "Failed to kill process: Arc Helper (PID: 12346)"
+              "message": "Failed to restart process: Arc Helper (PID: 12346)"
             },
             {
               "success": false,
-              "message": "Failed to kill process: Arc Helper (Renderer) (PID: 12347)"
+              "message": "Failed to restart process: Arc Helper (Renderer) (PID: 12347)"
             },
             {
               "success": false,
-              "message": "Failed to kill process: Arc Helper (GPU) (PID: 12348)"
+              "message": "Failed to restart process: Arc Helper (GPU) (PID: 12348)"
             }
           ]
         },
@@ -555,7 +555,7 @@
           },
           {
             "callsTool": {
-              "name": "kill-process",
+              "name": "restart-process",
               "arguments": {
                 "processName": "Arc",
                 "id": 12345,
@@ -564,12 +564,12 @@
             }
           },
           {
-            "meetsCriteria": "Kills Arc and all its helper processes as requested, but fails to kill some of them as main process is killed first"
+            "meetsCriteria": "Restarts Arc and all its helper processes as requested, but fails to restart some of them as main process is restarted first"
           }
         ]
       },
       {
-        "input": "@kill-process kill UpNote",
+        "input": "@prorest restart UpNote",
         "mocks": {
           "list-processes": [
             {
@@ -613,10 +613,10 @@
               "appName": "UpNote"
             }
           ],
-          "kill-process": [
+          "restart-process": [
             {
               "success": true,
-              "message": "Killed process: UpNote (PID: 12348)"
+              "message": "Restarted process: UpNote (PID: 12348)"
             }
           ]
         },
@@ -633,7 +633,7 @@
           },
           {
             "callsTool": {
-              "name": "kill-process",
+              "name": "restart-process",
               "arguments": {
                 "processName": "UpNote",
                 "id": 12348,
@@ -642,44 +642,44 @@
             }
           },
           {
-            "meetsCriteria": "Kills only the main UpNote process, as no helpers and/or related processes were specified"
+            "meetsCriteria": "Restarts only the main UpNote process, as no helpers and/or related processes were specified"
           }
         ]
       },
       {
-        "input": "@kill-process kill all node processes",
+        "input": "@prorest restart all node processes",
         "mocks": {
-          "killall-process": {
+          "restartall-process": {
             "success": true,
-            "message": "Killed all \"node\" processes"
+            "message": "Restarted all \"node\" processes"
           }
         },
         "expected": [
           {
             "callsTool": {
-              "name": "killall-process",
+              "name": "restartall-process",
               "arguments": {
                 "processName": "node"
               }
             }
           },
           {
-            "meetsCriteria": "Kills all node processes using the killall tool"
+            "meetsCriteria": "Restarts all node processes using the restartall tool"
           }
         ]
       },
       {
-        "input": "@kill-process force kill all Google Chrome Helper processes",
+        "input": "@prorest force restart all Google Chrome Helper processes",
         "mocks": {
-          "killall-process": {
+          "restartall-process": {
             "success": true,
-            "message": "Killed all \"Google Chrome Helper\" processes"
+            "message": "Restarted all \"Google Chrome Helper\" processes"
           }
         },
         "expected": [
           {
             "callsTool": {
-              "name": "killall-process",
+              "name": "restartall-process",
               "arguments": {
                 "processName": "Google Chrome Helper",
                 "force": true
@@ -687,7 +687,7 @@
             }
           },
           {
-            "meetsCriteria": "Force kills all Google Chrome Helper processes using elevated privileges"
+            "meetsCriteria": "Force restarts all Google Chrome Helper processes using elevated privileges"
           }
         ]
       }
@@ -750,34 +750,34 @@
       "type": "checkbox"
     },
     {
-      "description": "Close window after killing a process.",
+      "description": "Close window after restarting a process.",
       "label": "Close Window",
-      "name": "closeWindowAfterKill",
+      "name": "closeWindowAfterRestart",
       "required": false,
       "default": true,
-      "title": "After Killing",
+      "title": "After Restarting",
       "type": "checkbox"
     },
     {
-      "description": "Clear search bar after killing a process.",
+      "description": "Clear search bar after restarting a process.",
       "label": "Clear Search Bar",
-      "name": "clearSearchBarAfterKill",
+      "name": "clearSearchBarAfterRestart",
       "required": false,
       "default": true,
       "title": "",
       "type": "checkbox"
     },
     {
-      "description": "Go back to root search after killing a process.",
+      "description": "Go back to root search after restarting a process.",
       "label": "Go Back to Root Search",
-      "name": "goToRootAfterKill",
+      "name": "goToRootAfterRestart",
       "required": false,
       "default": false,
       "title": "",
       "type": "checkbox"
     },
     {
-      "description": "Skip confirmation dialogs when killing processes.",
+      "description": "Skip confirmation dialogs when restarting processes.",
       "label": "Never Ask for Confirmation",
       "name": "skipConfirmation",
       "required": false,
