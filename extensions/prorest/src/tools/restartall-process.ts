@@ -35,13 +35,13 @@ export default async function restartAllProcesses(input: Input) {
     throw new Error(`No restartable processes found with the name "${processName}".`);
   }
 
-  const results = await Promise.allSettled(
-    restartableProcesses.map((process) => restartProcess(process, input.force)),
-  );
+  const results = await Promise.allSettled(restartableProcesses.map((process) => restartProcess(process, input.force)));
 
   const failures = results.filter((result) => result.status === "rejected");
   if (failures.length > 0) {
-    throw new Error(`Failed to restart ${failures.length} of ${restartableProcesses.length} "${processName}" processes.`);
+    throw new Error(
+      `Failed to restart ${failures.length} of ${restartableProcesses.length} "${processName}" processes.`,
+    );
   }
 
   return {

@@ -239,9 +239,7 @@ export default function ProcessList() {
       return;
     }
 
-    const results = await Promise.allSettled(
-      restartableProcesses.map((item) => restartSelectedProcess(item, force)),
-    );
+    const results = await Promise.allSettled(restartableProcesses.map((item) => restartSelectedProcess(item, force)));
     const failures = results.filter((result) => result.status === "rejected");
     if (failures.length > 0) {
       handleRestartError(
