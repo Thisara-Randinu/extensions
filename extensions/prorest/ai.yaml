@@ -1,0 +1,55 @@
+instructions: |
+  When handling process restart requests:
+  1. For single process (e.g. 'restart Safari'):
+     - Use list-processes with searchTerm: ['Safari']
+     - Only restart the exact process name match (e.g., 'Safari' matches 'Safari' but not 'Safari Helper', or 'Notion' does not match 'Notion Helper' or 'Notion Calendar')
+     - DO NOT restart helper processes even if found in the search
+     - Call restart-process directly - DO NOT ask for confirmation as the tool handles it
+  2. For multiple processes (e.g. 'restart UpNote and Notion'):
+     - Use list-processes ONCE with all terms in the array (e.g., searchTerm: ['UpNote', 'Notion'])
+     - Only restart processes that exactly match the requested names
+     - DO NOT restart helper processes even if they contain the search terms
+     - Call restart-process directly for each process - DO NOT ask for confirmation
+     - Example: 'restart UpNote and Notion' should only restart 'UpNote' and 'Notion', NOT 'UpNote Helper' or 'Notion Helper' or 'Notion Calendar'
+  3. For restarting all processes by name (e.g. 'restart all node processes'):
+     - Call restartall-process directly with the exact process name
+     - Only use restartall-process when the user explicitly asks to restart all processes of a name
+  4. For process with related processes (e.g. 'restart Chrome with related processes'):
+     - Use list-processes with the app name (e.g., searchTerm: ['Chrome'])
+     - Restart main process first, then all related helper processes
+     - Include processes with matching name patterns (e.g. 'Chrome Helper')
+     - Only restart helpers when explicitly requested with phrases like 'with related processes' or 'and all its processes'
+     - Call restart-process directly for each process - DO NOT ask for confirmation
+  5. When searching for processes:
+     - Use list-processes tool which returns detailed process info
+     - For exact matches, compare the full processName
+     - DO NOT match partial names unless explicitly looking for helpers
+     - Results include: id (PID), cpu usage, memory usage, type (app/binary/prefPane on macOS, app/binary on Windows)
+  6. When restarting processes:
+     - Always provide processName and id (PID) for restart-process
+     - Include the full path for better process identification
+     - Call restart-process directly - the tool will handle confirmation UI
+  7. Process types and special handling:
+     - 'app': Main application processes (.app on macOS, .exe in Program Files on Windows)
+     - 'binary': Helper processes and command line tools
+     - 'prefPane': System preference panes (macOS only)
+  8. Memory and CPU considerations:
+     - Can sort processes by memory (mem) or CPU usage
+     - Memory is in bytes, CPU in percentage
+  9. Error handling:
+     - Handle cases where process is not found
+     - Handle failed restart operations gracefully
+     - Provide clear feedback on success/failure
+  10. IMPORTANT: When restarting multiple processes:
+     - Always use a single list-processes call with all search terms in the array
+     - DO NOT make separate list-processes calls for each process
+     - Only restart processes that exactly match the requested names
+     - DO NOT restart helper processes unless explicitly requested
+     - DO NOT ask for confirmation - the restart-process tool handles it
+     - Example: 'restart UpNote and Notion' should only restart processes named exactly 'UpNote' and 'Notion'
+  11. For PID-based restart (e.g. 'restart PID 12345, 23142, 32456'):
+      - When user specifies PIDs directly, bypass list-processes tool
+      - Call restart-process directly for each PID
+      - No need to search for process names or paths
+      - Handle multiple PIDs in a single request by calling restart-process for each PID
+      - Example: For 'restart PID 12345, 23142, 32456', make three separate restart-process calls with respective PIDs
